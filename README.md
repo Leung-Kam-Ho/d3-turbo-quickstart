@@ -12,7 +12,9 @@ On Linux, `flash-linear-attention` is installed automatically through the `sys_p
 
 ## Timings
 
-Apple Silicon (MPS), bf16, 26B model:
+bf16, 26B model.
+
+### Apple Silicon (MPS)
 
 | Step | Time |
 |---|---:|
@@ -24,9 +26,22 @@ Apple Silicon (MPS), bf16, 26B model:
 | Video track (11 s clip, 2 boxes/s) | 222.74 s |
 | **Total inference** | **341.61 s** |
 
+### NVIDIA DGX Spark (CUDA)
+
+| Step | Time |
+|---|---:|
+| Model load | 339.85 s |
+| Asset download | 1.48 s |
+| Text (2 questions) | 23.72 s |
+| Box (4 questions, 1 image) | 19.11 s |
+| Images in options (3 images) | 13.33 s |
+| Video track (11 s clip, 2 boxes/s) | 79.57 s |
+| **Total inference** | **135.73 s** |
+
 Notes:
 
-- `text` is the first inference call, so it includes one-time MPS kernel compilation.
+- `text` is the first inference call, so it includes one-time kernel compilation/warmup.
+- Model load on DGX Spark includes first-time CUDA initialization and loading the 52 GB checkpoint.
 - The video example produces 22 boxes over an 11-second clip.
-- macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels.
-- Full run output is in [`run.log`](run.log).
+- macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark run).
+- The Apple Silicon run output is in [`run.log`](run.log).
