@@ -11,7 +11,8 @@ from huggingface_hub import hf_hub_download
 from transformers import AutoModel
 
 if torch.cuda.is_available():
-    DEVICE = "cuda"
+    # An explicit index is required: torch.cuda.set_device(torch.device("cuda")) raises.
+    DEVICE = f"cuda:{torch.cuda.current_device()}"
 elif torch.backends.mps.is_available():
     DEVICE = "mps"
 else:
@@ -21,9 +22,9 @@ print(f"[device] {DEVICE}", flush=True)
 
 
 def synchronize():
-    if DEVICE == "cuda":
+    if torch.device(DEVICE).type == "cuda":
         torch.cuda.synchronize()
-    elif DEVICE == "mps":
+    elif torch.device(DEVICE).type == "mps":
         torch.mps.synchronize()
 
 
