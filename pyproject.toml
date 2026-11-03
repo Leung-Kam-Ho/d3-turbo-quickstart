@@ -1,0 +1,25 @@
+[project]
+name = "decision-3-0-playground"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Kam Ho", email = "71874669+Leung-Kam-Ho@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "accelerate>=1.15.0",
+    "opencv-python-headless>=5.0.0.93",
+    "pillow>=13.0.0",
+    "safetensors>=0.8.0",
+    "torch>=2.15.0",
+    "torchvision>=0.29.2",
+    "transformers==5.17.0",
+]
+
+[project.scripts]
+decision-3-0-playground = "decision_3_0_playground:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
