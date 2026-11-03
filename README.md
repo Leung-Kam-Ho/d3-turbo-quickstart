@@ -1,4 +1,4 @@
-# decision-3.0-playground
+# d3-turbo-quickstart
 
 Quickstart for [`vllm-sr/d3-turbo`](https://huggingface.co/vllm-sr/d3-turbo), a 26B multimodal decision model. The script auto-selects the device (CUDA, Apple MPS, or CPU) and prints the time used by each example.
 
