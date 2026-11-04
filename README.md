@@ -45,7 +45,18 @@ bf16, 26B model.
 
 ### d3-flash
 
-NVIDIA DGX Spark (CUDA):
+#### Apple Silicon (MPS)
+
+| Step | Mean (3 runs) | Fastest |
+|---|---:|---:|
+| Model load (once) | 4.55 s | — |
+| Asset download (once) | 0.45 s | — |
+| Text | 0.45 s | 0.41 s |
+| Text + image | 4.08 s | 4.05 s |
+| Text + video | 2.54 s | 2.23 s |
+| **Total inference** | **7.07 s** | — |
+
+#### NVIDIA DGX Spark (CUDA)
 
 | Step | Mean (3 runs) | Fastest |
 |---|---:|---:|
@@ -58,8 +69,8 @@ NVIDIA DGX Spark (CUDA):
 
 Notes:
 
-- The Apple Silicon table was captured with one run per example. The DGX Spark tables show the mean and fastest of 3 runs.
-- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run).
+- The d3-turbo Apple Silicon table was captured with one run per example. The other tables show the mean and fastest of 3 runs.
+- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run; 0.54 s for d3-flash on Apple Silicon).
 - Model load on DGX Spark includes first-time CUDA initialization and loading the checkpoint.
 - The d3-turbo video example produces 22 boxes over an 11-second clip.
 - macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark runs).
