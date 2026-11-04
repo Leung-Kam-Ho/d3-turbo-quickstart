@@ -5,8 +5,11 @@ Quickstart for [`vllm-sr/d3-turbo`](https://huggingface.co/vllm-sr/d3-turbo), a 
 ## Usage
 
 ```bash
-uv run quickstart.py
+uv run quickstart.py        # d3-turbo
+uv run quickstart-flash.py  # d3-flash
 ```
+
+Both scripts share the device selection and timing helpers in `bench.py`.
 
 On Linux, `flash-linear-attention` is installed automatically through the `sys_platform == 'linux'` marker in `pyproject.toml`.
 
