@@ -19,7 +19,7 @@ On Linux, `flash-linear-attention` is installed automatically through the `sys_p
 
 bf16, 26B model.
 
-#### Apple Silicon (MPS)
+#### Apple Silicon (M3 Ultra, MPS)
 
 | Step | Time |
 |---|---:|
@@ -45,7 +45,7 @@ bf16, 26B model.
 
 ### d3-flash
 
-#### Apple Silicon (MPS)
+#### Apple Silicon (M3 Ultra, MPS)
 
 | Step | Mean (3 runs) | Fastest |
 |---|---:|---:|
@@ -69,6 +69,7 @@ bf16, 26B model.
 
 Notes:
 
+- The Apple Silicon results were measured on an M3 Ultra.
 - The d3-turbo Apple Silicon table was captured with one run per example. The other tables show the mean and fastest of 3 runs.
 - `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run; 0.54 s for d3-flash on Apple Silicon).
 - Model load on DGX Spark includes first-time CUDA initialization and loading the checkpoint.
