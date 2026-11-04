@@ -21,15 +21,15 @@ bf16, 26B model.
 
 #### Apple Silicon (M3 Ultra, MPS)
 
-| Step | Time |
-|---|---:|
-| Model load | 49.30 s |
-| Asset download | 1.54 s |
-| Text (2 questions) | 72.21 s |
-| Box (4 questions, 1 image) | 27.34 s |
-| Images in options (3 images) | 19.32 s |
-| Video track (11 s clip, 2 boxes/s) | 222.74 s |
-| **Total inference** | **341.61 s** |
+| Step | Mean (3 runs) | Fastest |
+|---|---:|---:|
+| Model load (once) | 17.72 s | — |
+| Asset download (once) | 1.38 s | — |
+| Text (2 questions) | 5.18 s | 0.75 s |
+| Box (4 questions, 1 image) | 25.32 s | 25.18 s |
+| Images in options (3 images) | 18.64 s | 18.60 s |
+| Video track (11 s clip, 2 boxes/s) | 218.00 s | 217.86 s |
+| **Total inference** | **267.14 s** | — |
 
 #### NVIDIA DGX Spark (CUDA)
 
@@ -70,8 +70,8 @@ bf16, 26B model.
 Notes:
 
 - The Apple Silicon results were measured on an M3 Ultra.
-- The d3-turbo Apple Silicon table was captured with one run per example. The other tables show the mean and fastest of 3 runs.
-- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run; 0.54 s for d3-flash on Apple Silicon).
+- All tables show the mean and fastest of 3 runs.
+- `text` is the first inference call, so it includes one-time kernel compilation/warmup (14.03 s for d3-turbo on Apple Silicon; 2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run; 0.54 s for d3-flash on Apple Silicon).
 - Model load on DGX Spark includes first-time CUDA initialization and loading the checkpoint.
 - The d3-turbo video example produces 22 boxes over an 11-second clip.
 - macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark runs).
