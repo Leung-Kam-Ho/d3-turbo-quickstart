@@ -31,20 +31,20 @@ bf16, 26B model.
 
 ### NVIDIA DGX Spark (CUDA)
 
-| Step | Time |
-|---|---:|
-| Model load | 339.85 s |
-| Asset download | 1.48 s |
-| Text (2 questions) | 23.72 s |
-| Box (4 questions, 1 image) | 19.11 s |
-| Images in options (3 images) | 13.33 s |
-| Video track (11 s clip, 2 boxes/s) | 79.57 s |
-| **Total inference** | **135.73 s** |
+| Step | Mean (3 runs) | Fastest |
+|---|---:|---:|
+| Model load (once) | 310.03 s | — |
+| Asset download (once) | 1.44 s | — |
+| Text (2 questions) | 1.13 s | 0.55 s |
+| Box (4 questions, 1 image) | 8.87 s | 8.79 s |
+| Images in options (3 images) | 6.56 s | 6.54 s |
+| Video track (11 s clip, 2 boxes/s) | 71.77 s | 71.67 s |
+| **Total inference** | **88.33 s** | — |
 
 Notes:
 
-- The tables above were captured with one run per example. The scripts now default to 3 runs and report the mean and fastest run.
-- `text` is the first inference call, so it includes one-time kernel compilation/warmup.
+- The Apple Silicon table was captured with one run per example. The DGX Spark table shows the mean and fastest of 3 runs.
+- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s on the first DGX Spark run).
 - Model load on DGX Spark includes first-time CUDA initialization and loading the 52 GB checkpoint.
 - The video example produces 22 boxes over an 11-second clip.
 - macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark run).
