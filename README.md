@@ -15,9 +15,11 @@ On Linux, `flash-linear-attention` is installed automatically through the `sys_p
 
 ## Timings
 
+### d3-turbo
+
 bf16, 26B model.
 
-### Apple Silicon (MPS)
+#### Apple Silicon (MPS)
 
 | Step | Time |
 |---|---:|
@@ -29,7 +31,7 @@ bf16, 26B model.
 | Video track (11 s clip, 2 boxes/s) | 222.74 s |
 | **Total inference** | **341.61 s** |
 
-### NVIDIA DGX Spark (CUDA)
+#### NVIDIA DGX Spark (CUDA)
 
 | Step | Mean (3 runs) | Fastest |
 |---|---:|---:|
@@ -41,11 +43,24 @@ bf16, 26B model.
 | Video track (11 s clip, 2 boxes/s) | 71.77 s | 71.67 s |
 | **Total inference** | **88.33 s** | — |
 
+### d3-flash
+
+NVIDIA DGX Spark (CUDA):
+
+| Step | Mean (3 runs) | Fastest |
+|---|---:|---:|
+| Model load (once) | 109.74 s | — |
+| Asset download (once) | 0.48 s | — |
+| Text | 0.55 s | 0.15 s |
+| Text + image | 1.76 s | 1.72 s |
+| Text + video | 0.97 s | 0.94 s |
+| **Total inference** | **3.28 s** | — |
+
 Notes:
 
-- The Apple Silicon table was captured with one run per example. The DGX Spark table shows the mean and fastest of 3 runs.
-- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s on the first DGX Spark run).
-- Model load on DGX Spark includes first-time CUDA initialization and loading the 52 GB checkpoint.
-- The video example produces 22 boxes over an 11-second clip.
-- macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark run).
+- The Apple Silicon table was captured with one run per example. The DGX Spark tables show the mean and fastest of 3 runs.
+- `text` is the first inference call, so it includes one-time kernel compilation/warmup (2.30 s for d3-turbo and 1.35 s for d3-flash on their first DGX Spark run).
+- Model load on DGX Spark includes first-time CUDA initialization and loading the checkpoint.
+- The d3-turbo video example produces 22 boxes over an 11-second clip.
+- macOS logs fallbacks for `causal_conv1d` and `flash-linear-attention`; Linux + CUDA uses the optimized kernels (`causal_conv1d` still falls back on the DGX Spark runs).
 - The Apple Silicon run output is in [`run.log`](run.log).
