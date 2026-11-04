@@ -1,6 +1,6 @@
 import json
 
-from bench import DEVICE, timed
+from bench import DEVICE, bench, timed
 from huggingface_hub import hf_hub_download
 from transformers import AutoModel
 
@@ -25,8 +25,8 @@ with timed("asset download"):
 
 
 # Text
-with timed("text"):
-    result = model.system_one(
+def text():
+    return model.system_one(
         state="The order arrived damaged yesterday. The customer has a receipt and asks for a replacement today.",
         questions={
             "route": {
@@ -53,11 +53,14 @@ with timed("text"):
             }
         },
     )
-print(json.dumps(result["answers"], indent=2))
+
+
+print(json.dumps(bench("text", text)["answers"], indent=2))
+
 
 # Text and an image (or several)
-with timed("text + image"):
-    result = model.system_one(
+def text_and_image():
+    return model.system_one(
         state="The customer says the blender arrived cracked and attached the receipt.",
         images=[asset("example-receipt.png")],  # local paths, http(s) URLs, PIL images or base64 data URLs
         questions={
@@ -85,11 +88,14 @@ with timed("text + image"):
             }
         },
     )
-print(json.dumps(result["answers"], indent=2))
+
+
+print(json.dumps(bench("text + image", text_and_image)["answers"], indent=2))
+
 
 # Text and a video (or several)
-with timed("text + video"):
-    result = model.system_one(
+def text_and_video():
+    return model.system_one(
         state="A short clip from a test camera.",
         videos=[asset("example-video.mp4")],  # local paths, http(s) URLs, base64 data URLs or frame arrays
         questions={
@@ -108,7 +114,9 @@ with timed("text + video"):
             }
         },
     )
-print(json.dumps(result["answers"], indent=2))
+
+
+print(json.dumps(bench("text + video", text_and_video)["answers"], indent=2))
 
 # Or as a pipeline:
 # transformers.pipeline("decision", model="vllm-sr/d3-flash", trust_remote_code=True)(state=..., questions=..., images=..., videos=...)

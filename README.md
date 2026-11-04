@@ -1,6 +1,6 @@
 # d3-turbo-quickstart
 
-Quickstart for [`vllm-sr/d3-turbo`](https://huggingface.co/vllm-sr/d3-turbo), a 26B multimodal decision model. The script auto-selects the device (CUDA, Apple MPS, or CPU) and prints the time used by each example.
+Quickstarts for [`vllm-sr/d3-turbo`](https://huggingface.co/vllm-sr/d3-turbo) (26B) and [`vllm-sr/d3-flash`](https://huggingface.co/vllm-sr/d3-flash). The scripts auto-select the device (CUDA, Apple MPS, or CPU) and time each example.
 
 ## Usage
 
@@ -9,7 +9,7 @@ uv run quickstart.py        # d3-turbo
 uv run quickstart-flash.py  # d3-flash
 ```
 
-Both scripts share the device selection and timing helpers in `bench.py`.
+Both scripts share the device selection and timing helpers in `bench.py`. Each example runs 3 times by default and reports the mean and fastest run; set `BENCH_REPEATS` to change that (for example, `BENCH_REPEATS=1`).
 
 On Linux, `flash-linear-attention` is installed automatically through the `sys_platform == 'linux'` marker in `pyproject.toml`.
 
@@ -43,6 +43,7 @@ bf16, 26B model.
 
 Notes:
 
+- The tables above were captured with one run per example. The scripts now default to 3 runs and report the mean and fastest run.
 - `text` is the first inference call, so it includes one-time kernel compilation/warmup.
 - Model load on DGX Spark includes first-time CUDA initialization and loading the 52 GB checkpoint.
 - The video example produces 22 boxes over an 11-second clip.

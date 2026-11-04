@@ -1,9 +1,8 @@
-from bench import DEVICE, timed
+from bench import DEVICE, bench, timed
 from huggingface_hub import hf_hub_download
 from transformers import AutoModel
 
 print(f"[device] {DEVICE}", flush=True)
-
 
 with timed("model load"):
     model = AutoModel.from_pretrained(
@@ -31,19 +30,23 @@ with timed("asset download"):
 
 
 # Text: several questions, one call
-with timed("text"):
-    print(model.system_one(
+def text():
+    return model.system_one(
         state="Ticket: the invoice total is wrong after the plan change.",
         questions={
             "route": {"type": "choice", "instructions": "Which team handles this?",
                       "criteria": {"billing": "Billing", "tech": "Technical support"}},
             "urgent": {"type": "noul", "instructions": "Is the customer asking for an urgent fix?"},
         },
-    ))
+    )
+
+
+print(bench("text", text))
+
 
 # Box: where is it in the image? Four questions, one read of the photo
-with timed("box (image)"):
-    print(model.system_one(
+def box():
+    return model.system_one(
         state="A photo from a dog festival.",
         images=[asset("example-frisbee.jpg")],  # local paths, http(s) URLs, PIL images or base64-encoded images
         questions={
@@ -52,22 +55,33 @@ with timed("box (image)"):
             "cone": {"type": "box", "instructions": "The orange cone"},
             "camera": {"type": "box", "instructions": "The camera on the tripod"},
         },
-    ))
+    )
+
+
+print(bench("box (image)", box))
+
 
 # Images in options: each option is an image that only this question sees
-with timed("images in options"):
-    print(model.system_one(
+def images_in_options():
+    return model.system_one(
         state="This animal: <animal>",
         questions={"pick": {"type": "choice", "instructions": "Which picture shows the same kind of animal?",
                             "criteria": {"a": "<a>", "b": "<b>", "c": "<c>"}}},
         assets={"<animal>": asset("example-panda.jpg"), "<a>": asset("example-option-a.jpg"),
                 "<b>": asset("example-option-b.jpg"), "<c>": asset("example-option-c.jpg")},
-    ))
+    )
+
+
+print(bench("images in options", images_in_options))
+
 
 # Video: a track over the whole clip, two boxes per second
-with timed("video (track)"):
-    print(model.system_one(
+def video():
+    return model.system_one(
         state="A bird at a feeder.",
         videos=[asset("example-hummingbird.mp4")],  # local paths, http(s) URLs, base64-encoded videos or frame arrays
         questions={"target": {"type": "track", "instructions": "The hummingbird", "rate": 2}},
-    ))
+    )
+
+
+print(bench("video (track)", video))
